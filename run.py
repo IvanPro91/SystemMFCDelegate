@@ -4,6 +4,7 @@ from datetime import datetime
 
 from website import create_app
 from website.extensions import *
+from website.includes.VipNet.vipnet_class import VipNet
 from website.includes.database.database_mfc import SpZapros, Zapros
 from website.includes.database.database_models import Regions, PortalSettings, PortalOrders, PortalImages, \
     KomeksUpdatesNames, RoleUserMFC
@@ -52,6 +53,18 @@ with app.app_context():
     #for region in all_regions: Regions.addRegion(region)
     for names in names_update: KomeksUpdatesNames.addKomeksUpdatesNames(names)
 
+def AsyncVipNetPaskageMfc():
+    with app.app_context():
+        regions = Regions.query.all()
+        for region in regions:
+            if region.active_portal:
+                vipnet = VipNet(user=region.vipnet_login, password=region.vipnet_password)
+                data = vipnet.getTransportMFTP()
+                print(data)
+                pass
+
+
+
 def AsyncPortalMfc():
     with app.app_context():
         regions = Regions.query.all()
@@ -99,10 +112,14 @@ def AsyncKomeksUpdate():
 
 scheduler = BackgroundScheduler(daemon=True)
 scheduler.add_job(AsyncPortalMfc, trigger='interval', seconds=360)
+scheduler.add_job(AsyncVipNetPaskageMfc, trigger='interval', seconds=360)
 #scheduler.add_job(AsyncKomeksUpdate, trigger='interval', seconds=360)
 scheduler.start()
 
 if __name__ == '__main__':
     #adsdasasd
+    vipnet = VipNet()
+    data = vipnet.getTransportMFTP()
+    print(data)
     print("Запуск модуля, внутреннего сайта, без обновления данных.")
-    app.run(host='0.0.0.0', port=8999, debug=True)
+    #app.run(host='0.0.0.0', port=8999, debug=True)

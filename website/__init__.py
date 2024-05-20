@@ -24,7 +24,6 @@ def create_app():
     app.register_blueprint(queue, url_prefix='/')
 
     database.init_app(app)
-    marshmallow.init_app(app)
     migrate.init_app(app, database)
 
     loginManager.login_message = ''

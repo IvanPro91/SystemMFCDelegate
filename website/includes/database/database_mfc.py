@@ -2,7 +2,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta, time
 from marshmallow import post_dump, fields
 from sqlalchemy.dialects.postgresql import JSONB
-from ...extensions import database, marshmallow
+from ...extensions import database
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import func, desc, text, and_
 from sqlalchemy.orm import joinedload
