@@ -1,0 +1,120 @@
+<div class="card-header align-items-center">
+  <h5 class="card-action-title mb-0"><i class="bx bx-cog me-2"></i>Настройки "{{ region.name_region }}"</h5>
+  <div class="card-action-element">
+	  <div class="dropdown">
+		  <button type="button" class="btn dropdown-toggle hide-arrow p-0" data-bs-toggle="dropdown" aria-expanded="false"><i class="bx bx-dots-vertical-rounded"></i></button>
+		  <ul class="dropdown-menu dropdown-menu-end">
+			  <li><a class="dropdown-item" href="javascript:void(0);">Share timeline</a></li>
+			  <li><a class="dropdown-item" href="javascript:void(0);">Suggest edits</a></li>
+			  <li>
+				  <hr class="dropdown-divider">
+			  </li>
+			  <li><a class="dropdown-item" href="javascript:void(0);">Report bug</a></li>
+		  </ul>
+	  </div>
+  </div>
+</div>
+<div class="card-body">
+  <div class="alert alert-warning" role="alert">
+	  <h6 class="alert-heading mb-1">Настройка сервисов для получения статистики </h6>
+	  <span>обновлений</span>
+  </div>
+
+  <h5 class="card-header">Настройки адресов</h5>
+  <div class="card-body">
+	  <div class="row">
+		  <!-- ИИС -->
+		  <div class="mb-3 col-12 col-sm-6 form-password-toggle fv-plugins-icon-container">
+			  <label class="form-label" for="newPassword">ИИС</label>
+		  </div>
+		  <div class="mb-3 col-12 col-sm-6 form-password-toggle fv-plugins-icon-container">
+			  <div class="input-group input-group-merge has-validation">
+				  <input class="form-control input_value_settings" type="text" name="ip_ais" placeholder="IP:PORT" value="{% if region.ip_ais %} {{ region.ip_ais }} {% endif %}">
+			  </div>
+		  </div>
+
+		  <!-- СМЭВ3 -->
+		  <div class="mb-3 col-12 col-sm-6 form-password-toggle fv-plugins-icon-container">
+			  <label class="form-label" for="newPassword">СМЭВ3</label>
+		  </div>
+		  <div class="mb-3 col-12 col-sm-6 form-password-toggle fv-plugins-icon-container">
+			  <div class="input-group input-group-merge has-validation">
+				  <input class="form-control input_value_settings" type="text" name="ip_smev3" placeholder="IP:PORT" value="{% if region.ip_smev3 %} {{ region.ip_smev3 }} {% endif %}">
+			  </div>
+		  </div>
+
+		  <!-- ДОКТРАНСФОРМЕР -->
+		  <div class="mb-3 col-12 col-sm-6 form-password-toggle fv-plugins-icon-container">
+			  <label class="form-label" for="newPassword">ДОКТРАНСФОРМЕР</label>
+		  </div>
+		  <div class="mb-3 col-12 col-sm-6 form-password-toggle fv-plugins-icon-container">
+			  <div class="input-group input-group-merge has-validation">
+				  <input class="form-control input_value_settings" type="text" name="ip_doctransformer" placeholder="IP:PORT" value="{% if region.ip_doctransformer %} {{ region.ip_doctransformer }} {% endif %}">
+			  </div>
+		  </div>
+
+		  <!-- СИГНЕР2 -->
+		  <div class="mb-3 col-12 col-sm-6 form-password-toggle fv-plugins-icon-container">
+			  <label class="form-label" for="newPassword">СИГНЕР2</label>
+		  </div>
+		  <div class="mb-3 col-12 col-sm-6 form-password-toggle fv-plugins-icon-container">
+			  <div class="input-group input-group-merge has-validation">
+				  <input class="form-control input_value_settings" type="text" name="ip_signer2" placeholder="IP:PORT" value="{% if region.ip_signer2 %} {{ region.ip_signer2 }} {% endif %}">
+			  </div>
+		  </div>
+
+		  <!-- ЭДО -->
+		  <div class="mb-3 col-12 col-sm-6 form-password-toggle fv-plugins-icon-container">
+			  <label class="form-label" for="newPassword">ЭДО</label>
+		  </div>
+		  <div class="mb-3 col-12 col-sm-6 form-password-toggle fv-plugins-icon-container">
+			  <div class="input-group input-group-merge has-validation">
+				  <input class="form-control input_value_settings" type="text" name="ip_edo" placeholder="IP:PORT" value="{% if region.ip_edo %} {{ region.ip_edo }} {% endif %}">
+			  </div>
+		  </div>
+
+		  <!-- Сайт -->
+		  <div class="mb-3 col-12 col-sm-6 form-password-toggle fv-plugins-icon-container">
+			  <label class="form-label" for="newPassword">Сайт</label>
+		  </div>
+		  <div class="mb-3 col-12 col-sm-6 form-password-toggle fv-plugins-icon-container">
+			  <div class="input-group input-group-merge has-validation">
+				  <input class="form-control input_value_settings" type="text" name="ip_site" placeholder="IP:PORT" value="{% if region.ip_site %} {{ region.ip_site }} {% endif %}">
+			  </div>
+		  </div>
+		  <div>
+			  <button class="btn btn-primary me-2" id="btn_save">Сохранить</button>
+		  </div>
+	  </div>
+  </div>
+</div>
+
+<script>
+$("#btn_save").click(function(){
+	var data_values = [];
+	
+	$(".input_value_settings").each(function(i, e){
+		var this_value = $(e);
+		var name = this_value.attr("name")
+		data_values.push({"name": name, "value": this_value.val()})
+	})
+	
+	
+	
+	$.ajax({
+		url: '/settings/save_info_settings',
+		method: 'POST',
+		data: {
+			'data': JSON.stringify(data_values),
+			'id_region': {{ region.id }}
+		},
+		success: function(data){
+			
+		},
+		error: function (jqXHR, exception) {
+			alert("Ошибка", jqXHR.responseText, true);
+		}
+	});
+})
+
+</script>

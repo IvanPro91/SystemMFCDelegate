@@ -1,0 +1,106 @@
+{% extends "/header/header.html" %}
+{% block body %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+	<div class="d-flex flex-column justify-content-center">
+		<h4 class="mb-1 mt-3">Поручения</h4>
+		<p class="text-muted">История поручений и делигирование</p>
+	</div>
+</div>
+
+<div class="row mb-4">
+	<div class="col-xxl-12 mb-4 order-5 order-xxl-0">
+    <div class="card h-100">
+      <div class="card-header">
+        <div class="card-title mb-0">
+          <h5 class="m-0">Список поручений МФЦ {{ current_user.region.name_region }}</h5>
+        </div>
+      </div>
+      <div class="card-body">
+      <div class="table-responsive">
+        <table class="table border-top">
+          <thead>
+            <tr>
+              <th class="text-truncate">Создано</th>
+              <th class="text-truncate">Исполнено</th>
+              <th class="text-truncate">Автор</th>
+              <th class="text-truncate">Текст поручения</th>
+              <th class="text-truncate">Статус</th>
+              <th class="text-truncate">Действие</th>
+            </tr>
+          </thead>
+          <tbody>
+			{% for order in orders %}
+            <tr>
+              <td class="text-truncate"><span class="fw-medium"><span class="badge bg-primary">{{ order.date_in.strftime('%d.%m.%Y') }}</span></span></td>
+              <td class="text-truncate"><span class="badge bg-warning">{{ order.date_out.strftime('%d.%m.%Y') }}</span></td>
+              <td class="text-truncate">
+				<div class="d-flex flex-column">
+					<span class="emp_name text-truncate">{{ order.surname }} {{ order.names }}</span>
+					<small class="emp_post text-truncate text-muted">{{ order.occupation }}</small>
+				</div>
+			  </td>
+              <td class="text-truncate">
+				{{ order.theme_order }}
+				<ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
+					{% if order.delegate_order %}
+						{% for d_order in order.delegate_order %}
+						{% set sp_fio = d_order.user.user_login.split() %}
+						  <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="{{ d_order.user.user_login }}" data-bs-original-title="{{ d_order.user.user_login }}">
+							<span class="avatar-initial rounded-circle" style="color: white;background:{% if d_order.status  %}  #5a2f1f; {% else %}  #df4e2f; {% endif %}">
+							{% if sp_fio|length > 1 %}
+								{{ sp_fio[0][0] }}
+								{{ sp_fio[1][0] }}
+							{% else %}
+								{{ sp_fio[0][0] }}
+							{% endif %}
+							</span>
+						  </li>
+						 {% endfor %}
+					{% endif %}
+				</ul>
+				</td>
+              <td class="text-truncate">{% if order.new_order %} Выполнено {% else %} Новый {% endif %}</td>
+              <td class="text-truncate">
+				<button class="btn btn-sm btn-icon view_order" id_order="{{ order.id }}"><i class="bx bx-edit"></i></button>
+			  </td>
+            </tr>
+			{% endfor %}
+          </tbody>
+        </table>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="viewOrder" tabindex="-1" style="display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered1 modal-simple modal-add-new-cc">
+    <div class="modal-content p-2 ">
+      <div class="modal-body" id="view_order_info">
+       
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+	$(".view_order").click(function(){
+		var id_order = $(this).attr("id_order");
+		$.ajax({
+			url: '/order_portal/view_order',
+			method: 'POST',
+			data: {
+				'id_order': id_order,
+				'id_region': {{ current_user.region.id }}
+			},
+			success: function(data){
+				$("#view_order_info").html(data);
+				$("#viewOrder").modal("show");
+			},
+			error: function (jqXHR, exception) {
+				alert("Ошибка", jqXHR.responseText, true);
+			}
+		});
+	})
+</script>
+{% endblock %}

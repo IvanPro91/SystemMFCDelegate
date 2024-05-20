@@ -1,0 +1,126 @@
+{% extends "/header/header.html" %}
+{% block body %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+	<div class="d-flex flex-column justify-content-center">
+		<h4 class="mb-1 mt-3">Сотрудники</h4>
+		<p class="text-muted">Список сотрудников МФЦ</p>
+	</div>
+	
+	<div class="d-flex align-content-center flex-wrap gap-3">
+      <button type="submit" class="btn btn-primary" id="addUserMfc">Добавить сотрудника</button>
+    </div>
+</div>
+
+<div class="row mb-4">
+	<div class="col-xxl-12 mb-4 order-5 order-xxl-0">
+    <div class="card h-100">
+      <div class="card-header">
+        <div class="card-title mb-0">
+          <h5 class="m-0">Список сотрудников МФЦ {{ current_user.region.name_region }}</h5>
+        </div>
+      </div>
+      <div class="card-body">
+	  <div class="table-responsive text-nowrap">
+		<table class="table">
+		  <thead>
+			<tr>
+			  <th>ФИО</th>
+			  <th>Должность</th>
+			  <th>Выполнено поручений</th>
+			  <th>На исполнении</th>
+			</tr>
+		  </thead>
+		  <tbody class="table-border-bottom-0">
+			{% for user in users %}
+			<tr>
+			  <td>{{ user.user_login }}</td>
+			  <td>{% if user.job %} {{ user.job }} {% endif %}</td>
+			  <td>0</td>
+			  <td>0</td>
+			</tr>
+			{% endfor %}
+		  </tbody>
+		</table>
+	  </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="addNewUser" tabindex="-1" style="display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-simple modal-enable-otp modal-dialog-centered">
+    <div class="modal-content p-3">
+      <div class="modal-body">
+        <div class="text-center mb-4">
+          <h3>Добавить нового сотрудника МФЦ</h3>
+        </div>
+        <div class="row g-3 fv-plugins-bootstrap5 fv-plugins-framework">
+          <div class="mb-2">
+			<label class="form-label">Сотрудники в ИИС</label>
+			
+			<div class="col-12 col-md-12 d-flex">
+				<div class="col-10 col-md-10">
+					<select id="delegate_user" class="form-select">
+					  <option selected="">Список сотрудников</option>
+						{% for user_ais in users_ais %}
+							<option value="{{ user_ais.tn }}">{{ user_ais.fio }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				
+				<div class="col-2 col-md-2">
+					<button type="button" class="btn btn-primary" id="AddUser">Добавить</button>
+				</div>
+			</div>
+		  </div>
+		  
+          <div class="mb-2">
+			<label class="form-label">Список сотрудников</label>
+			<div class="demo-inline-spacing mt-3">
+				<div class="list-group list-group-flush" id="view_users">
+				
+				</div>
+			</div>
+		  </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+	$("#addUserMfc").click(function(){
+		$("#addNewUser").modal("show");
+	})
+	
+	$("#AddUser").click(function(){
+		var tn = $("#delegate_user").val();
+		AddUser(tn);
+	})
+	
+	function AddUser(tn){
+		//view_users
+		$.ajax({
+			url: '/org_users/add_user',
+			method: 'POST',
+			data: {
+				'tn': tn
+			},
+			success: function(data){
+				if (data.status){
+					$("#view_users").append(`
+						<div class="d-flex flex-column list-group-item list-group-item-action">
+							<span class="emp_name text-truncate">${data.user_ais.fio}</span>
+							<small class="emp_post text-truncate text-muted">${data.user_ais.job}</small>
+						</div>
+					`);
+				}
+			},
+			error: function (jqXHR, exception) {
+				alert("Ошибка", jqXHR.responseText, true);
+			}
+		});
+	}
+</script>
+{% endblock %}

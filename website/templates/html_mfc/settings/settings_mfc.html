@@ -1,0 +1,357 @@
+{% extends "/header/header.html" %}
+{% block body %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+	<div class="d-flex flex-column justify-content-center">
+		<h4 class="mb-1 mt-3">Настройки</h4>
+		<p class="text-muted">Общие настройки МФЦ</p>
+	</div>
+</div>
+
+<div class="nav-align-top mb-4">
+	<ul class="nav nav-tabs nav-fill" role="tablist">
+		<li class="nav-item" role="presentation">
+			<button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-settings-mfc" aria-controls="navs-settings-mfc" aria-selected="true">
+			<i class="menu-icon tf-icons bx bxs-cog"></i>  Настройки</button>
+		</li>
+		<li class="nav-item" role="presentation">
+			<button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-settings-ip-mfc" aria-controls="navs-settings-ip-mfc" aria-selected="false" tabindex="-1">
+			<i class="menu-icon tf-icons bx bxs-coin-stack"></i> Настройка IP адресов МФЦ</button>
+		</li>
+		<li class="nav-item" role="presentation">
+			<button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-settings-omv-mfc" aria-controls="navs-settings-omv-mfc" aria-selected="false" tabindex="-1">
+			<i class="menu-icon tf-icons bx bxs-coin-stack"></i> Настройка ОМВ по МФЦ </button>
+		</li>
+		<li class="nav-item" role="presentation">
+			<button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-chk-mfc" aria-controls="navs-chk-mfc" aria-selected="false" tabindex="-1">
+			<i class="menu-icon tf-icons bx bxs-network-chart"></i> Авто проверка МФЦ</button>
+		</li>
+		<li class="nav-item" role="presentation">
+			<button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-alerts" aria-controls="navs-alerts" aria-selected="false" tabindex="-1">
+			<i class="menu-icon tf-icons bx bxs-bell"></i>
+			Уведомления</button>
+		</li>
+	</ul>
+	  
+	  
+	
+	  
+	<div class="tab-content">
+		<div class="tab-pane fade show active" id="navs-settings-mfc" role="tabpanel">
+		<!-- Настройки -->
+			<div class="card mb-4">
+			  <h5 class="card-header">Портал МФЦ РО</h5>
+			  <div class="card-body">
+				  <div class="alert alert-warning" role="alert">
+					<h6 class="alert-heading mb-1">Настройки подключения к порталу МФЦ, для получения поручений</h6></span>
+				  </div>
+				  <div class="row">
+					<div class="mb-3 col-12 col-sm-6 fv-plugins-icon-container">
+					  <label class="form-label" for="newPassword">Логин</label>
+					  <div class="input-group input-group-merge">
+						<input class="form-control" type="text" id="portal_login" placeholder="Логин от портала" value="{% if current_user.region.portal_login %} {{ current_user.region.portal_login }} {% endif %}">
+					  </div>
+					</div>
+
+					<div class="mb-3 col-12 col-sm-6 fv-plugins-icon-container">
+					  <label class="form-label" for="confirmPassword">Пароль</label>
+					  <div class="input-group input-group-merge">
+						<input class="form-control" type="password" id="portal_password" placeholder="Пароль от портала" value="{% if current_user.region.portal_password %} {{ current_user.region.portal_password }} {% endif %}">
+					  </div>
+					</div>
+					<div>
+					  <button class="btn btn-primary me-2" id="save_portal_settings">Сохранить</button>
+					</div>
+					<label class="list-group-item m-3">
+					  <input class="form-check-input me-1 chk_bool_settings" type="checkbox" name="active_portal" {% if current_user.region.active_portal %} checked {% endif %}>
+					  Обновлять поручения с портала
+					</label>
+				  </div>
+			  </div>
+			</div>
+			
+			<div class="card mb-4">
+			  <h5 class="card-header">Настройка IP адресов камер через портал <button class="btn btn-primary me-2" id="addCameraMfc">Добавить камеру</button> <button class="btn btn-primary me-2" id="saveCameraMfc">Сохранить</button></h5>
+			  <div class="card-body">
+				  <div class="row" id="list_camera">
+					{% for camera in list_camera %}
+					<div class="block_camera row">
+						<div class="mb-3 col-12 col-sm-6 fv-plugins-icon-container">
+						  <label class="form-label" for="newPassword">Название камеры</label>
+						  <div class="input-group input-group-merge">
+							<input class="form-control name_camera_mfc" type="text" placeholder="Название" value="{{ camera.name_camera_mfc }}">
+						  </div>
+						</div>
+
+						<div class="mb-3 col-12 col-sm-6 fv-plugins-icon-container">
+						  <label class="form-label" for="confirmPassword">URL ссылка через портал</label>
+						  <div class="input-group input-group-merge">
+							<input class="form-control url_camera_mfc" type="text" placeholder="URL" value="{{ camera.url_camera_mfc }}">
+						  </div>
+						</div>
+					</div>
+					{% endfor %}
+					<label class="list-group-item m-3">
+						  <input class="form-check-input me-1 chk_bool_settings" type="checkbox" name="active_view_camera" {% if current_user.region.active_view_camera %} checked {% endif %}>
+						  Отображать камеры на главном экране
+						</label>
+				  </div>
+			  </div>
+			</div>
+			
+			<div class="card mb-4">
+			  <h5 class="card-header">Настройка VipNet</h5>
+			  <div class="card-body">
+				  <div class="row">
+					<div class="mb-3 col-12 col-sm-6 fv-plugins-icon-container">
+					  <label class="form-label" for="newPassword">Логин</label>
+					  <div class="input-group input-group-merge">
+						<input class="form-control" type="text" id="vipnet_login" placeholder="Логин от координатора" value="{% if current_user.region.vipnet_login %} {{ current_user.region.vipnet_login }} {% endif %}">
+					  </div>
+					</div>
+
+					<div class="mb-3 col-12 col-sm-6 fv-plugins-icon-container">
+					  <label class="form-label" for="confirmPassword">Пароль</label>
+					  <div class="input-group input-group-merge">
+						<input class="form-control" type="password" id="vipnet_password" placeholder="Пароль от координатора" value="{% if current_user.region.vipnet_password %} {{ current_user.region.vipnet_password }} {% endif %}">
+					  </div>
+					</div>
+					<div>
+					  <button class="btn btn-primary me-2" id="save_vipnet_settings">Сохранить</button>
+					</div>
+					 <label class="list-group-item m-3">
+						  <input class="form-check-input me-1 chk_bool_settings" type="checkbox" name="active_vipnet" {% if current_user.region.active_vipnet %} checked {% endif %}>
+						  Отслеживание VipNet пакетов
+						</label>
+						
+				  </div>
+			  </div>
+			</div>
+			
+			<div class="card mb-4">
+			  <h5 class="card-header">Настройка проверки масок документооборота ЭДО</h5>
+			  <div class="card-body">
+				  <div class="row">
+					<div class="mb-3 col-12 col-sm-6 fv-plugins-icon-container">
+					  <label class="form-label" for="newPassword">Тут мы получаем ОГВ</label>
+					</div>
+
+					<div class="mb-3 col-12 col-sm-6 fv-plugins-icon-container">
+					  Тут список ОГВ по группам
+					</div>
+				  </div>
+			  </div>
+			</div>
+			
+			<div class="card mb-4">
+			  <h5 class="card-header">Настройка личного кабинета</h5>
+			  <div class="card-body">
+				  <div class="row">
+					<div class="mb-3 col-12 col-sm-6 fv-plugins-icon-container">
+					  <label class="list-group-item">
+						  <input class="form-check-input me-1 chk_bool_settings" type="checkbox" name="active_inventory" {% if current_user.region.active_inventory %} checked {% endif %}>
+						  Использовать модуль инвентаризации
+						</label>
+						
+					  <label class="list-group-item">
+						  <input class="form-check-input me-1 chk_bool_settings" type="checkbox" name="active_edit_photo" {% if current_user.region.active_edit_photo %} checked {% endif %}>
+						  Использовать редактор фотографий
+						</label>
+						
+					  <label class="list-group-item">
+						  <input class="form-check-input me-1 chk_bool_settings" type="checkbox" name="active_download_updates" {% if current_user.region.active_download_updates %} checked {% endif %}>
+						  Скачивание обновлений Комэкс
+						</label>
+					</div>
+				  </div>
+			  </div>
+			</div>
+		</div>
+
+		<div class="tab-pane fade" id="navs-settings-ip-mfc" role="tabpanel">
+			<!-- Настройка IP адресов МФЦ -->
+			
+			<div class="row">
+			  <div class="col-xl-4 col-lg-5 col-md-5">
+				<!-- About User -->
+				<div class="card mb-4">
+				  <div class="card-body">
+					<small class="text-muted text-uppercase">Регионы:</small>
+					<ul class="list-unstyled mb-4 mt-3" style="overflow-y: scroll; height: 600px;">
+						{% for region in regions %}
+							<li class="d-flex align-items-center mb-3">
+								<button class="list-group-item list-group-item-action btn_info" id_mfc="{{ region.id }}"><i class="bx bx-building"></i><span>{{ region.name_region }}</span></button>
+							</li>
+						{% endfor %}
+					</ul>
+				  </div>
+				</div>
+			  </div>
+			  
+			  <div class="col-xl-8 col-lg-7 col-md-7">
+				<!-- Activity Timeline -->
+				<div class="card card-action mb-4"  id="form_settings">
+				 
+				</div>
+			  </div>
+			</div>
+		</div>
+		
+		<div class="tab-pane fade" id="navs-settings-omv-mfc" role="tabpanel">
+		  <!-- Авто проверка МФЦ -->
+		</div>
+
+		<div class="tab-pane fade" id="navs-chk-mfc" role="tabpanel">
+		  <!-- Авто проверка МФЦ -->
+		</div>
+
+		<div class="tab-pane fade" id="navs-alerts" role="tabpanel">
+		  <!-- Уведомления -->
+		</div>
+	</div>
+</div>
+
+<script>
+
+$(".chk_bool_settings").on("change", function(){
+	var this_element = $(this).attr("name");
+	var this_value = $(this).prop("checked");
+	console.log(this_element, this_value)
+	
+	$.ajax({
+		url: '/settings/change_settings_bool',
+		method: 'POST',
+		data: {
+			'name': this_element,
+			'value': this_value
+		},
+		success: function(data){
+			// Пока что ничего не выводим
+		},
+		error: function (jqXHR, exception) {
+			alert("Ошибка", jqXHR.responseText, true);
+		}
+	});
+})
+
+
+$("#save_portal_settings").click(function(){
+	var portal_login = $("#portal_login").val();
+	var portal_password = $("#portal_password").val();
+	
+	$.ajax({
+		url: '/settings/save_portal_settings',
+		method: 'POST',
+		data: {
+			'id_region': {{ current_user.region.id }},
+			'portal_login': portal_login,
+			'portal_password': portal_password
+		},
+		success: function(data){
+			// Пока что ничего не выводим
+		},
+		error: function (jqXHR, exception) {
+			alert("Ошибка", jqXHR.responseText, true);
+		}
+	});
+})
+
+$("#save_vipnet_settings").click(function(){
+	var vipnet_login = $("#vipnet_login").val();
+	var vipnet_password = $("#vipnet_password").val();
+	
+	$.ajax({
+		url: '/settings/save_vipnet_settings',
+		method: 'POST',
+		data: {
+			'id_region': {{ current_user.region.id }},
+			'vipnet_login': vipnet_login,
+			'vipnet_password': vipnet_password
+		},
+		success: function(data){
+			// Пока что ничего не выводим
+		},
+		error: function (jqXHR, exception) {
+			alert("Ошибка", jqXHR.responseText, true);
+		}
+	});
+})
+
+function GetAllSettingsCamera(){
+	var getAllElement = $(".block_camera");
+	var data = []
+	getAllElement.each(function(i, e){
+		var get_name = $(e).find(".name_camera_mfc").val()
+		var get_url = $(e).find(".url_camera_mfc").val()
+		data.push({"name": get_name, "url": get_url})
+	})
+	return data;
+}
+
+
+$("#saveCameraMfc").click(function(){
+	var j_data = JSON.stringify(GetAllSettingsCamera());
+	$.ajax({
+		url: '/settings/save_camera_settings',
+		method: 'POST',
+		data: {
+			'id_region': {{ current_user.region.id }},
+			'data': j_data
+		},
+		success: function(data){
+			
+		},
+		error: function (jqXHR, exception) {
+			alert("Ошибка", jqXHR.responseText, true);
+		}
+	});
+})
+
+function GetInfoSettings(id_region){
+	$.ajax({
+		url: '/settings/get_info_settings',
+		method: 'POST',
+		data: {
+			'id_region': id_region
+		},
+		success: function(data){
+			$("#form_settings").html(data);
+		},
+		error: function (jqXHR, exception) {
+			alert("Ошибка", jqXHR.responseText, true);
+		}
+	});
+}
+
+
+$(".btn_info").click(function(){
+	var this_btn = $(this);
+	var id_region = this_btn.attr("id_mfc");
+	GetInfoSettings(id_region);
+})
+
+GetInfoSettings(1);
+
+
+$("#addCameraMfc").click(function(){
+	$("#list_camera").append(`
+		<div class="block_camera row">
+			<div class="mb-3 col-12 col-sm-6 fv-plugins-icon-container">
+			  <label class="form-label" for="newPassword">Название камеры</label>
+			  <div class="input-group input-group-merge">
+				<input class="form-control name_camera_mfc" type="text" placeholder="Название" value="">
+			  </div>
+			</div>
+
+			<div class="mb-3 col-12 col-sm-6 fv-plugins-icon-container">
+			  <label class="form-label" for="confirmPassword">URL ссылка через портал</label>
+			  <div class="input-group input-group-merge">
+				<input class="form-control url_camera_mfc" type="text" placeholder="URL" value="">
+			  </div>
+			</div>
+		</div>
+	`)
+})
+
+</script>
+
+{% endblock %}

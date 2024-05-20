@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<title>Авторизация</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<link rel="icon" href="/static/assets/images/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" href="/static/assets/css/style.css">
+	<link rel="stylesheet" href="/static/assets/select2/css/select2.min.css">
+	<script src="/static/assets/js/vendor-all.min.js"></script>
+	<script src="/static/assets/js/plugins/bootstrap.min.js"></script>
+	<script src="/static/assets/js/ripple.js"></script>
+	<script src="/static/assets/select2/js/select2.min.js"></script>
+	<script src="/static/assets/sweetalert2/sweetalert2.all.min.js"></script>
+	<link href="/static/assets/sweetalert2/sweetalert2.min.css" rel="stylesheet">
+</head>
+
+
+<div class="auth-wrapper">
+	<div class="auth-content">
+		<div class="card">
+			<div class="row align-items-center text-center">
+				<div class="col-md-12">
+					<div class="card-body p-4">
+					<form action="/auth/login" method="get">
+						<img src="/static/assets/images/logo-mfc.jpg" alt="" class="img-fluid mb-2">
+						<h4 class="mb-2 f-w-700">СКиП МФЦ</h4>
+						{% with messages = get_flashed_messages() %}
+						   {% if messages %}
+							  {% for message in messages %}
+								 <div class="alert alert-danger" role="alert">{{ message }}</div>
+							  {% endfor %}
+						   {% endif %}
+						{% endwith %}
+
+						<div class="form-group mb-3">
+							<select class="form-control" name="id_region" placeholder="Район МФЦ" id="id_region">
+								{% for region in regions %}
+									<option value="{{ region.id }}">{{ region.name_region }}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<div class="form-group mb-3">
+							<select class="form-control" name="id_user" placeholder="Сотрудник МФЦ" id="id_user">
+							</select>
+						</div>
+						<div class="form-group mb-3">
+							<input type="password" class="form-control" name="password" placeholder="Пароль">
+						</div>
+						<button class="btn btn-block btn-primary mb-1" type="submit">Войти</button>
+					</form>
+					</div>
+				</div>
+			</div>
+			<div class="mb-2 mb-md-0">
+			© Разработано Донченко И.А. Боковский МФЦ
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+
+<script>
+	$("#id_region").select2();
+	$("#id_user").select2();
+	
+	
+	$("#id_region").on("change", function(){
+		$.ajax({
+			url: '/auth/get_user_region',
+			method: 'POST',
+			data: {
+				'id_region': $("#id_region").val()
+			},
+			success: function(data){
+				if(data.status){
+					$("#id_user").children().remove()
+					$(data.data).each(function(i, e){
+						console.log(e)
+						$("#id_user").append(`<option value="${e.id_user}">${e.username}</option>`)
+					})
+				} else {
+					
+				}
+			},
+			error: function (jqXHR, exception) {
+				alert("Ошибка", jqXHR.responseText, true);
+			}
+		});
+	})
+</script>
+</html>

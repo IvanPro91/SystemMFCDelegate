@@ -1,0 +1,79 @@
+<div class="text-center mb-4">
+  <h3>{{ order.theme_order }}</h3>
+  <p>Настройка делегирования поручения</p>
+</div>
+<div class="row g-3 fv-plugins-bootstrap5 fv-plugins-framework">
+	
+	 <div class="col-12 col-md-12">
+		{{ order.mfc_section_body|safe }}
+	  </div>
+  
+  <div class="col-10 fv-plugins-icon-container">
+	<label class="form-label w-100"></label>
+	<div class="input-group input-group-merge has-validation">
+		<select id="delegate_user" class="form-select">
+		  <option selected="">Список сотрудников</option>
+		  {% for user in users %}
+			<option value="{{ user.id }}">[{{ user.role.name_role }}] {{ user.user_login }}</option>
+		  {% endfor %}
+		</select>
+	</div>
+  </div>
+  
+  <div class="col-2 fv-plugins-icon-container">
+	<label class="form-label w-100"></label>
+	<button type="button" class="btn btn-icon btn-secondary" id="AddOrderUser">
+		<span class="tf-icons bx bx-plus"></span>
+	  </button>
+  </div>
+  
+  
+  <div class="col-12 col-md-12">
+	<label class="form-label" for="modalAddCardName">Список делегируемых</label>
+	<div class="demo-inline-spacing mt-3" id="list_users_delegate"></div>
+  </div>
+  
+ 
+  <div class="col-12 text-center">
+	<button type="reset" class="btn btn-label-secondary btn-reset mt-3" data-bs-dismiss="modal" aria-label="Закрыть">Закрыть</button>
+  </div>
+</div>
+
+<script>
+	function GetListUsersDelegate(){
+		$.ajax({
+			url: '/order_portal/get_user_list',
+			method: 'POST',
+			data: {
+				'id_region': {{ current_user.region.id }},
+				'id_order': {{ order.id }}
+			},
+			success: function(data){
+				$("#list_users_delegate").html(data);
+			},
+			error: function (jqXHR, exception) {
+				alert("Ошибка", jqXHR.responseText, true);
+			}
+		});
+	}
+	
+	GetListUsersDelegate()
+	
+	$("#AddOrderUser").click(function(){
+		$.ajax({
+			url: '/order_portal/add_user_list',
+			method: 'POST',
+			data: {
+				'id_region': {{ current_user.region.id }},
+				'id_order': {{ order.id }},
+				'id_user': $("#delegate_user").val()
+			},
+			success: function(data){
+				GetListUsersDelegate()
+			},
+			error: function (jqXHR, exception) {
+				alert("Ошибка", jqXHR.responseText, true);
+			}
+		});
+	})
+</script>

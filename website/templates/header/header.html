@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta/>
+    <title>Главная страница администратора</title>
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/static/assets/vendor/fonts/boxicons.css" />
+
+    <link rel="stylesheet" href="/static/assets/vendor/css/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="/static/assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="/static/assets/css/demo.css" />
+
+    <link rel="stylesheet" href="/static/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="/static/assets/vendor/libs/apex-charts/apex-charts.css" />
+
+    <script src="/static/assets/vendor/js/helpers.js"></script>
+    <script src="/static/assets/js/config.js"></script>
+	
+    <link rel="stylesheet" href="/static/assets/sweetalert2/sweetalert2.min.css" />
+    <script src="/static/assets/sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="/static/assets/jquery/jquery-3.6.0.js"></script>
+  </head>
+
+  <body>
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+          <div class="app-brand demo">
+            <a href="/main_mfc" class="app-brand-link">
+				<img src="/static/assets/images/logo-mini-mfc.png" alt class="w-px-40 h-auto" />
+				<span class="menu-text fw-bold ms-2">СКиП МФЦ</span>
+            </a>
+
+            <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+              <i class="bx bx-chevron-left bx-sm align-middle"></i>
+            </a>
+          </div>
+
+          <div class="menu-inner-shadow"></div>
+		  
+          <ul class="menu-inner py-1">
+			<li class="menu-header small text-uppercase">
+			  <span class="menu-header-text">Меню:</span>
+			</li>
+			<li class="menu-item">
+			  <a href="/org_users" class="menu-link cursor-pointer">
+				<i class="menu-icon tf-icons bx bx-user"></i>
+				<div data-i18n="Сотрудники">Сотрудники</div>
+			  </a>
+			</li>
+			
+			<li class="menu-item">
+			  <a href="/updates" class="menu-link cursor-pointer">
+				<i class="menu-icon tf-icons bx bx-upload"></i>
+				<div data-i18n="Обновления">Обновления</div>
+			  </a>
+			</li>
+			
+			<li class="menu-item">
+			  <a href="/order_portal" class="menu-link cursor-pointer">
+				<i class="menu-icon tf-icons bx bx-task"></i>
+				<div data-i18n="Поручения">Поручения</div>
+			  </a>
+			</li>
+			
+			<li class="menu-item">
+			  <a href="/queue" class="menu-link cursor-pointer">
+				<i class="menu-icon tf-icons bx bx-task"></i>
+				<div data-i18n="Очередь">Очередь</div>
+			  </a>
+			</li>
+			
+			<li class="menu-header small text-uppercase">
+			  <span class="menu-header-text">Настройки:</span>
+			</li>
+			
+			<li class="menu-item">
+			  <a href="/settings" class="menu-link cursor-pointer">
+				<i class="menu-icon tf-icons bx bxs-cog"></i>
+				<div data-i18n="Общие настройки">Общие настройки</div>
+			  </a>
+			</li>
+          </ul>
+        </aside>
+
+        <div class="layout-page">
+          <nav
+            class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+            id="layout-navbar">
+            <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+              <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+                <i class="bx bx-menu bx-sm"></i>
+              </a>
+            </div>
+
+            <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+              <div class="navbar-nav align-items-center">
+				<h5 class="m-0 p-0">
+				  <span class="badge" style="background: #5a2f1f;">{{ current_user.region.name_region }}</span>
+				</h5>
+              </div>
+
+              <ul class="navbar-nav flex-row align-items-center ms-auto">
+                <!-- User -->
+                <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                  <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                      <img src="/static/assets/images/logo-mini-mfc.png" alt class="w-px-40 h-auto rounded-circle" />
+                    </div>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                      <a class="dropdown-item" href="#">
+                        <div class="d-flex">
+                          <div class="flex-shrink-0 me-3">
+                            <div class="avatar avatar-online">
+                              <img src="/static/assets/images/logo-mini-mfc.png" alt class="w-px-40 h-auto rounded-circle" />
+                            </div>
+                          </div>
+                          <div class="flex-grow-1">
+                            <span class="fw-medium d-block">
+								{{ current_user.user_login }}
+							</span>
+                            <small class="text-muted">ID номер:{{ current_user.id }}</small>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="#">
+                        <i class="bx bx-user me-2"></i>
+                        <span class="align-middle">Мой профиль</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="#">
+                        <i class="bx bx-cog me-2"></i>
+                        <span class="align-middle">Настройки</span>
+                      </a>
+                    </li>
+                    <li>
+                      <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="/exit">
+                        <i class="bx bx-power-off me-2"></i>
+                        <span class="align-middle">Выход</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </nav>
+          <div class="content-wrapper">
+            <div class="container-xxl flex-grow-1 container-p-y">
+					{% block body %}
+						
+					{% endblock %}	
+              </div>
+            </div>
+            <div class="content-backdrop fade"></div>
+          </div>
+        </div>
+      </div>
+      <div class="layout-overlay layout-menu-toggle"></div>
+    </div>
+	
+	{% if current_user.active_portal %}
+	<div class="modal fade" id="modalPortalSettings" tabindex="-1" style="display: none;" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="modalCenterTitle">Настройки делегирования</h5>
+			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+			  <div class="row">
+				<div class="col mb-3">
+				  <label for="login_portal" class="form-label">Логин от портала</label>
+				  <input type="text" id="login_portal" class="form-control" placeholder="Логин от портала" value="{% if current_user.portal_settings %}{{ current_user.portal_settings[0].login_portal }} {% endif %}">
+				</div>
+			  </div>
+			  <div class="row g-2">
+				<div class="col mb-0">
+				  <label for="portal_password" class="form-label">Пароль от портала</label>
+				  <input type="password" id="portal_password" class="form-control" placeholder="Пароль от портала" value="{% if current_user.portal_settings %} {{ current_user.portal_settings[0].password_portal }} {% endif %}">
+				</div>
+			  </div>
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Закрыть</button>
+			  <button type="button" class="btn btn-primary" id="save_data">Проверить и сохранить</button>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	{% endif %}
+	
+    <script src="/static/assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="/static/assets/vendor/libs/popper/popper.js"></script>
+    <script src="/static/assets/vendor/js/bootstrap.js"></script>
+    <script src="/static/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="/static/assets/vendor/js/menu.js"></script>
+    <script src="/static/assets/vendor/libs/apex-charts/apexcharts.js"></script>
+    <script src="/static/assets/js/main.js"></script>
+    <script src="/static/assets/js/dashboards-analytics.js"></script>
+    <!--<script async defer src="https://buttons.github.io/buttons.js"></script>-->
+  </body>
+	<script>
+		$("#getRooms").click(function(){
+			getRooms(this);
+		})
+		
+		$("#getTypesTemplates").click(function(){
+			getTypesTemplates(this);
+		})
+		
+		$("#getUsers").click(function(){
+			getUsers(this);
+		})
+		
+		{% if current_user.active_portal %}
+			$("#btn_delegation_settings").click(function(){
+				$("#modalPortalSettings").modal("show");
+			})
+			
+			$("#save_data").click(function(){
+				$.ajax({
+					url: '/portal/save_settings',
+					method: 'post',
+					data: {
+						"login": $("#login_portal").val(),
+						"password": $("#portal_password").val()
+					},
+					success: function(data){
+						if (data.status){
+							$("#modalPortalSettings").modal("hide");
+							AlertMessage("Успешно", data.msg, false)
+						} else {
+							$("#modalPortalSettings").modal("hide");
+							AlertMessage("Ошибка", data.error, true)
+						}
+					},
+					error: function (jqXHR, exception) {
+						alert("Ошибка", jqXHR.responseText, true);
+					}
+				});
+			})
+		{% endif %}
+		
+		
+		function getRooms(element){
+			$(".menu-item").removeClass("active");
+			$.ajax({
+				url: '/admin/rooms',
+				method: 'post',
+				data: {
+				},
+				success: function(data){
+					$(element).parent().addClass("active")
+					$("#view_pages").html(data)
+				},
+				error: function (jqXHR, exception) {
+					alert("Ошибка", jqXHR.responseText, true);
+				}
+			});
+		}
+		
+		function getTypesTemplates(element){
+			$(".menu-item").removeClass("active");
+			$.ajax({
+				url: '/admin/typesTemplates',
+				method: 'post',
+				data: {
+				},
+				success: function(data){
+					$(element).parent().addClass("active")
+					$("#view_pages").html(data)
+				},
+				error: function (jqXHR, exception) {
+					alert("Ошибка", jqXHR.responseText, true);
+				}
+			});
+		}
+	
+		function getUsers(element){
+			$(".menu-item").removeClass("active");
+			$.ajax({
+				url: '/admin/getUsers',
+				method: 'post',
+				data: {
+				},
+				success: function(data){
+					$(element).parent().addClass("active")
+					$("#view_pages").html(data)
+				},
+				error: function (jqXHR, exception) {
+					alert("Ошибка", jqXHR.responseText, true);
+				}
+			});
+		}
+	
+		function AlertMessage(header, message, error){
+			if (error == false){
+				Swal.fire({
+					text: message,
+					icon: "success",
+					buttonsStyling: false,
+					confirmButtonText: "ОК",
+					customClass: {
+						confirmButton: "btn btn-primary"
+					}
+				});
+			} else {
+				Swal.fire({
+					text: message,
+					icon: "error",
+					buttonsStyling: false,
+					confirmButtonText: "ОК",
+					customClass: {
+						confirmButton: "btn btn-danger"
+					}
+				});
+			}
+		}
+	</script>
+</html>

@@ -1,0 +1,54 @@
+{% extends "/header/header.html" %}
+{% block body %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+	<div class="d-flex flex-column justify-content-center">
+		<h4 class="mb-1 mt-3">Очередь</h4>
+		<p class="text-muted">Получение списка очереди</p>
+	</div>
+</div>
+
+<div class="row mb-4">
+	<div class="col-xxl-12 mb-4 order-5 order-xxl-0">
+    <div class="card h-100">
+      <div class="card-header">
+        <div class="card-title mb-0">
+          <h5 class="m-0">Список очереди {{ current_user.region.name_region }}</h5>
+        </div>
+      </div>
+      <div class="card-body">
+  <div class="table-responsive">
+        <table class="table border-top">
+          <thead>
+            <tr>
+              <th class="text-truncate">ФИО</th>
+              <th class="text-truncate">Дата прихода</th>
+              <th class="text-truncate">Вызов или удаление</th>
+              <th class="text-truncate">Дата прихода</th>
+              <th class="text-truncate">Обновление/создания записи</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+			{% for queue in all_queue %}
+            <tr>
+				
+              <td class="text-truncate">{{ queue.fio }}</td>
+              <td class="text-truncate">{{ queue.dat_p.strftime('%d.%m.%Y %H:%M') }}</td>
+              <td class="text-truncate">{{ queue.dat_v.strftime('%d.%m.%Y %H:%M') }}</td>
+			  
+              <td class="text-truncate">{% if queue.dat_e %}{{ queue.dat_e.strftime('%d.%m.%Y %H:%M') }} {% endif %}</td>
+              <td class="text-truncate">{{ queue.updated_at.strftime('%d.%m.%Y %H:%M') }}</td>
+            </tr>
+			{% endfor %}
+          </tbody>
+        </table>
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
+	  
+
+	
+
+{% endblock %}
