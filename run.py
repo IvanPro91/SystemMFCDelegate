@@ -103,5 +103,6 @@ scheduler.add_job(AsyncPortalMfc, trigger='interval', seconds=360)
 scheduler.start()
 
 if __name__ == '__main__':
+    #adsdas
     print("Запуск модуля, внутреннего сайта, без обновления данных.")
     app.run(host='0.0.0.0', port=8999, debug=True)
